@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CEP Exam Seating Arrangement Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-glow page-glow-left"></div>
+    <div class="page-glow page-glow-right"></div>
+
+    <div class="site-shell">
+      <header class="hero-card">
+        <nav class="topbar">
+          <div>
+            <p class="eyebrow">College of Engineering Poonjar</p>
+            <h1>Exam Seating Arrangement Portal</h1>
+          </div>
+          <button id="logoutBtn" class="secondary-btn hidden" type="button">Logout</button>
+        </nav>
+
+        <div class="hero-grid">
+          <section class="hero-copy">
+            <span class="hero-pill">For BTech, BCA, and MCA departments</span>
+            <h2>One clean portal for publishing, managing, and viewing exam seat plans.</h2>
+            <p>
+              Teachers schedule and edit seating arrangements. Students securely view only
+              their assigned seat details. Admin users can monitor portal activity and
+              registered accounts.
+            </p>
+
+            <div class="hero-highlights">
+              <article class="highlight-card">
+                <h3>Role-based access</h3>
+                <p>Separate sign up and login for admin, teacher, and student users.</p>
+              </article>
+              <article class="highlight-card">
+                <h3>Teacher scheduling</h3>
+                <p>Create and update hall allocations for every supported department.</p>
+              </article>
+              <article class="highlight-card">
+                <h3>Student-safe view</h3>
+                <p>Students can only view their own published arrangements.</p>
+              </article>
+            </div>
+          </section>
+
+          <section id="authPanel" class="auth-card">
+            <div class="tab-row">
+              <button class="tab-btn active" data-auth-tab="login" type="button">Login</button>
+              <button class="tab-btn" data-auth-tab="signup" type="button">Sign Up</button>
+            </div>
+
+            <form id="loginForm" class="auth-form active">
+              <div>
+                <p class="eyebrow">Portal Access</p>
+                <h3>Login to your account</h3>
+              </div>
+              <label>
+                Role
+                <select name="role" required>
+                  <option value="admin">Admin</option>
+                  <option value="teacher">Teacher</option>
+                  <option value="student">Student</option>
+                </select>
+              </label>
+              <label>
+                Email
+                <input type="email" name="email" placeholder="name@cep.edu" required />
+              </label>
+              <label>
+                Password
+                <input type="password" name="password" placeholder="Enter password" required />
+              </label>
+              <button class="primary-btn" type="submit">Login</button>
+            </form>
+
+            <form id="signupForm" class="auth-form">
+              <div>
+                <p class="eyebrow">Create Access</p>
+                <h3>Register a new account</h3>
+              </div>
+              <label>
+                Role
+                <select name="role" id="signupRole" required>
+                  <option value="student">Student</option>
+                  <option value="teacher">Teacher</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </label>
+              <label>
+                Full name
+                <input type="text" name="name" placeholder="Enter full name" required />
+              </label>
+              <div class="field-grid">
+                <label>
+                  Department
+                  <select name="department" id="signupDepartment" required>
+                    <option value="BTech">BTech</option>
+                    <option value="BCA">BCA</option>
+                    <option value="MCA">MCA</option>
+                  </select>
+                </label>
+                <label>
+                  Register No / ID
+                  <input
+                    type="text"
+                    name="identifier"
+                    id="signupIdentifier"
+                    placeholder="Example: BTECH2026-001"
+                    required
+                  />
+                </label>
+              </div>
+              <label>
+                Email
+                <input type="email" name="email" placeholder="Enter email" required />
+              </label>
+              <label>
+                Password
+                <input type="password" name="password" placeholder="Create password" required />
+              </label>
+              <button class="primary-btn" type="submit">Create Account</button>
+            </form>
+
+            <div class="demo-card">
+              <p>Default demo logins</p>
+              <small>
+                Admin: <strong>admin@cep.edu</strong> / <strong>admin123</strong><br />
+                Teacher: <strong>teacher@cep.edu</strong> / <strong>teacher123</strong><br />
+                Student: <strong>student@cep.edu</strong> / <strong>student123</strong>
+              </small>
+            </div>
+          </section>
+        </div>
+      </header>
+
+      <main id="dashboard" class="dashboard hidden">
+        <section class="panel intro-panel">
+          <div>
+            <p class="eyebrow">Dashboard</p>
+            <h2 id="dashboardTitle">Welcome</h2>
+            <p id="dashboardSubtitle" class="muted"></p>
+          </div>
+          <div class="profile-card">
+            <span id="userRoleBadge" class="role-badge">ROLE</span>
+            <strong id="userName">User Name</strong>
+            <small id="userMeta"></small>
+          </div>
+        </section>
+
+        <section id="statsGrid" class="stats-grid"></section>
+
+        <section id="adminPanel" class="panel hidden">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Admin Overview</p>
+              <h3>Registered users</h3>
+            </div>
+          </div>
+          <div id="userList" class="user-list"></div>
+        </section>
+
+        <section id="teacherTools" class="panel hidden">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Teacher Controls</p>
+              <h3>Schedule or edit exam seating</h3>
+            </div>
+          </div>
+
+          <form id="scheduleForm" class="schedule-form">
+            <input type="hidden" name="scheduleId" />
+            <div class="field-grid triple-grid">
+              <label>
+                Department
+                <select name="department" required>
+                  <option value="BTech">BTech</option>
+                  <option value="BCA">BCA</option>
+                  <option value="MCA">MCA</option>
+                </select>
+              </label>
+              <label>
+                Exam name
+                <input type="text" name="examName" placeholder="Operating Systems" required />
+              </label>
+              <label>
+                Subject code
+                <input type="text" name="subjectCode" placeholder="CS305" required />
+              </label>
+            </div>
+
+            <div class="field-grid quad-grid">
+              <label>
+                Exam date
+                <input type="date" name="examDate" required />
+              </label>
+              <label>
+                Start time
+                <input type="time" name="startTime" required />
+              </label>
+              <label>
+                Hall
+                <input type="text" name="hall" placeholder="Main Block Hall 1" required />
+              </label>
+              <label>
+                Invigilator
+                <input type="text" name="invigilator" placeholder="Faculty name" required />
+              </label>
+            </div>
+
+            <label>
+              Seat allocation
+              <textarea
+                name="seatingText"
+                rows="8"
+                placeholder="Enter one student per line in this format: RegisterNo, Student Name, Seat No, Row"
+                required
+              ></textarea>
+            </label>
+
+            <div class="info-strip">
+              Example: <strong>BTECH2026-011, Anu Mariya, A12, Row 2</strong>
+            </div>
+
+            <div class="action-row">
+              <button class="primary-btn" type="submit">Save Schedule</button>
+              <button id="resetScheduleBtn" class="secondary-btn" type="button">Reset Form</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="section-head filter-head">
+            <div>
+              <p class="eyebrow">Published Seating Plans</p>
+              <h3>Department arrangements</h3>
+            </div>
+            <label class="filter-box">
+              Department filter
+              <select id="departmentFilter">
+                <option value="all">All Departments</option>
+                <option value="BTech">BTech</option>
+                <option value="BCA">BCA</option>
+                <option value="MCA">MCA</option>
+              </select>
+            </label>
+          </div>
+
+          <div id="scheduleList" class="schedule-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
